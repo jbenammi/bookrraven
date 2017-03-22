@@ -6,13 +6,36 @@ from datetime import datetime
 # from PIL import Image
 
 
-class Base_User_Manager(Base_User_Manager):
-    def create_user(self, username, password=None):
-        newUser = User(username= username, password=password)
+class Base_User_Manager(BaseUserManager):
+    def create_user(self, username, first_name, last_name, email, phone, groups="ART", password1=None):
+        if not username:
+            raise ValueError('Accounts must have a username')
+        newUser = self.model(
+            username= username,
+            email=self.normalize_email(email),
+            first_name=first_name,
+            last_name=last_name,
+            phone=phone,
+            groups=groups
+        )
+        newUser.set_password(password1)
+        newUser.save(using=self._db)
+        return newUser
 
+    def create_superuser(self, username, first_name, last_name, email, phone, password):
+        newUser = self.create_user(
+            username= username,
+            first_name=first_name,
+            last_name=last_name,
+            email=email,
+            phone=phone,
+            password1 = password
+        )
+        newUser.is_admin = True
+        newUser.save(using=self._db)
+        return newUser
 
-
-class User(AbstractBaseUser):
+class MyUser(AbstractBaseUser):
     BOOKER = 'BKR'
     ARTIST = 'ART'
     ACCESS_CHOICES = (
@@ -20,10 +43,11 @@ class User(AbstractBaseUser):
         (ARTIST, 'Artist')
         )
     username = models.CharField('Username', max_length=150, unique=True)
-    email = models.EmailField('Email Address')
+    email = models.EmailField('Email Address', max_length=255)
     first_name = models.CharField('First Name', max_length=45)
     last_name = models.CharField('Last Name', max_length=45)
     groups = models.CharField('Access', max_length=3, choices=ACCESS_CHOICES)
+    phone = models.CharField('Phone', max_length=11)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
@@ -31,22 +55,53 @@ class User(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'phone']
     objects = Base_User_Manager()
     def __str__(self):
         return 'ID: %s | Username: %s | Email: %s | Name: %s %s | Access: %s | Pass: %s' % (self.id, self.username, self.email, self.first_name, self.last_name, self.groups, self.password)
+
+    def get_full_name(self):
+        # The user is identified by their email address
+        return self.username
+
+    def get_short_name(self):
+        # The user is identified by their email address
+        return self.username
+
+    def has_perm(self, perm, obj=None):
+        "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
+
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        # Simplest possible answer: All admins are staff
+        return self.is_admin
+
 
 class Artist(models.Model):
     artist_name = models.CharField(max_length=100)
     site = models.URLField(max_length=200, blank=True)
     sound = models.URLField(max_length=200, blank=True)
     about = models.TextField(blank=True)
-    artist_photo = models.ImageField(null=True, blank=True, upload_to='uploads/%Y/%m/%d/')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    contact_id = models.ForeignKey('User')
+    contact_id = models.ForeignKey('MyUser')
     def __str__(self):
         return 'ID: %s | Artist: %s | Main Contact: %s' % (self.id, self.artist_name, self.contact_id.email)
+
+class ArtistImages(models.Model):
+    image = models.ImageField(null=True, blank=True, upload_to='uploads/%Y/%m/%d/')
+    artist = models.ForeignKey('Artist')
+
+    def __str__(self):
+        return 'ID: %s | Artist: %s | Image: %s' % (self.artist.id, self.artist.artist_name, self.image)
 
 class Venue(models.Model):
 	SEATTLE = 'SEA'
@@ -70,7 +125,7 @@ class Venue(models.Model):
 	venue_photo = models.ImageField(null=True, blank=True, upload_to='uploads/%Y/%m/%d/')
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
-	booker_id = models.ForeignKey('User')
+	booker_id = models.ForeignKey('MyUser')
 	def __str__(self):
 		return 'ID: %s | Venue: %s | Booker: %s %s' % (self.id, self.venue_name, self.booker_id.first_name, self.booker_id.last_name)
 
@@ -97,7 +152,7 @@ class Message(models.Model):
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 	event_id = models.ForeignKey('Event')
-	author_id = models.ForeignKey('User')
+	author_id = models.ForeignKey('MyUser')
 
 class Comment(models.Model):
 	comment = models.CharField(max_length=255)
@@ -105,4 +160,4 @@ class Comment(models.Model):
 	updated_at = models.DateTimeField(auto_now=True)
 	message_id = models.ForeignKey('Message')
 	event_id = models.ForeignKey('Event')
-	author_id = models.ForeignKey('User')
+	author_id = models.ForeignKey('MyUser')

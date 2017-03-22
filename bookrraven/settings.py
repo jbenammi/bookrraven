@@ -102,7 +102,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'bookr.User'
+AUTH_USER_MODEL = 'bookr.MyUser'
 AUTHENTICATION_BACKENDS = ['bookr.backends.EmailAuthBackend', ]
 
 # Internationalization

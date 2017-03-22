@@ -24,7 +24,7 @@
 				<li class="link modal-trigger" data-target="new_artist">Create Artist Profile</li>
 				{% else %}
 				<li><a href="{% url 'brr-artistinfo' artistInfo.id %}">Artist Profile</a></li>
-				{% endif %}		
+				{% endif %}
 				<li><a href="{% url 'brr-logout' %}">Logout</a></li>
 			</ul>
 			</div>
@@ -50,7 +50,8 @@
 		<h4 class="orange-text darken-4">Artist Profile</h4>
 			<form enctype="multipart/form-data" action="{% url 'brr-addartist' %}" method="post">
 				{% csrf_token %}
-				{{artistform.as_p}}				
+				{{artistform.as_p}}
+				{{artimgform.as_p}}
 				<button class="btn waves-effect waves-light orange darken-4 right" type="submit" name="action">Create</button>
 			</form>
 		</div>
