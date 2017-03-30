@@ -1,37 +1,71 @@
 {% include 'bookrraven/header_logged_in.html'  %}
 {% load staticfiles %}
-	<div class="container section">
+	<main class="container section">
 		<div class="row">
-			<div class="col s12 m4">
-				{% if artistInfo != None %}
+			<section class="col s12 m6 l6">
+				{% if artistInfo %}
 				<h4>{{artistInfo.artist_name}}</h4>
+				{% if artistImage %}
 				<img class="photo" src="{{artistImage.image.url}}">
+				{% endif %}
 				{% else %}
 				<h4>Please Create Your Artist Profile</h4>
 				{% endif %}
-			</div>
-		</div>
-		<div class="row section">
-			<div class="col s12 m6">
+			</section>
+			<section class="col s12 m4 l4 offset-l1">
+				{% if messages %}
+				{% for message in messages %}
+				<p>{{message}}</p>
+				{% endfor %}
+				{% endif %}
+				<h4>Pending Events</h4>
 				<table>
 					<thead>
 						<tr>
-							<th>Venue</th>
+							<th></th>
 							<th>Date</th>
+							<th>Venue Name</th>
+							<th>New Message</th>
 						</tr>
 					</thead>
 					<tbody>
-						{% for event in events_list %}
+						{% for event in artistEvents %}
+						{% if event.status == "Pend" %}
 						<tr>
-							<td>{{event.venue}}</td>
-							<td>{{event.date}}</td>
+							<td><a href="/event/{{event.id}}" class="btn-floating btn waves-effect waves-light red orange darken-4"><i class="material-icons">mode_edit</i></a></td>
+							<td>{{event.event_date}}</td>
+							<td>{{event.venue_id.venue_name}}</td>
+							<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check'{% endif %}{% endfor %}></td>
 						</tr>
+						{% endif %}
 						{% endfor %}
 					</tbody>
 				</table>
-			</div>
-
+				<h4>Accepted Events</h4>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th>Date</th>
+							<th>Venue Name</th>
+							<th>New Message</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for event in artistEvents %}
+						{% if event.status == "Acpt" %}
+						<tr>
+							<td><a href="/event/{{event.id}}" class="btn-floating btn waves-effect waves-light red orange darken-4"><i class="material-icons">mode_edit</i></a></td>
+							<td>{{event.event_date}}</td>
+							<td>{{event.venue_id.venue_name}}</td>
+							<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check'{% endif %}{% endfor %}></td>
+						</tr>
+						{% endif %}
+						{% endfor %}
+					</tbody>
+				</table>
+			</section>
 		</div>
-	</div>
+	</main>
 
 {% include 'bookrraven/footer_in.html'  %}

@@ -1,5 +1,7 @@
 {% load staticfiles %}
+<footer>
 
+</footer>
 <!-- Begin Scripts -->
 	<script src="{% static 'bookr/js/jquery-2.2.3.js' %}"></script>
 	<script src="{% static 'bookr/js/jquery-ui.js' %}"></script>
@@ -8,15 +10,15 @@
 	<script>
 	$(document).ready(function(){
 		$(function() {
-			$( "#datepicker" ).datepicker({
-				changeMonth: true,
-				changeYear: true
-			});
+			$('.datepicker').pickadate({
+		    selectMonths: true, // Creates a dropdown to control month
+		    selectYears: 15 // Creates a dropdown of 15 years to control year
+		  });
 		});
 
 		$('.modal-trigger').leanModal();
 
-	
+
 
 
 	})

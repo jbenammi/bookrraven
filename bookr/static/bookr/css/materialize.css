@@ -5557,7 +5557,7 @@ input[type=search]
   transition: all 0.3s;
 }
 
-textarea.materialize-textarea 
+textarea.materialize-textarea
 {
   background-color: transparent;
   border: none;
@@ -6497,8 +6497,8 @@ select:disabled {
 
 .file-field .btn, .file-field .btn-large {
   float: left;
-  height: 3rem;
-  line-height: 3rem;
+  /*height: 3rem;
+  line-height: 3rem;*/
 }
 
 .file-field span {

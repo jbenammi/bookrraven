@@ -12,38 +12,36 @@
 		<p><a class="white-text" href="http://{{artistInfo.site}}" target="_blank">{{artistInfo.site}}</a></p>
 		<p class="white-text">{{artistInfo.sound}}</p>
 	</div>
+	{% if request.user.groups == "BKR" and venueProfile %}
 	<button class="btn waves-effect waves-light orange darken-3 modal-trigger" data-target="modal_book_artist">Book Artist</button>
+	{% endif %}
+	{% if request.user.groups == "ART" and artistInfo.contact_id.id == request.user.id %}
 	<button class="btn waves-effect waves-light orange darken-3 modal-trigger" data-target="modal_AddImg">Add Image</button>
-	<div id='modal_book_artist' class="modal">
-		<div class="modal-content">
-			<form enctype="multipart/form-data" action="{% url 'brr-addevent' %}" method="post">
-					{% csrf_token %}
-				<input type="hidden" name="artist_id" value="{{artistInfo.id}}">
-				<input type="hidden" name="status" value="Pending Event">
-				<label for="venue_id">Venue</label>
-				<select name="venue_id">
-					{% for venue in venueInfo %}
-					{% if venue.booker_id == request.session.logged_user.id %}
-					<option value="{{venue.id}}" >{{venue.name}}</option>
-					{% endif %}
-					{% endfor %}
-				</select>
-				<label for="datepicker">Date:</label>
-				<input type="text" id="datepicker" name="event_date">
-				<button class="btn waves-effect waves-light orange darken-4" type="submit" name="action">BOOK</button>
-			</form>
-		</div>
-	</div>
 	<div id='modal_AddImg' class="modal">
 		<div class="modal-content">
-			<form enctype="multipart/form-data" action="{% url 'brr-addartistimage' %}" method="post">
-					{% csrf_token %}
+			<form enctype="multipart/form-data" action="{% url 'brr-addimage' %}" method="post">
+				{% csrf_token %}
 				<input type="hidden" name="artist_id" value="{{artistInfo.id}}">
-				<label for="image">Image:</label>
-				<input type="file" id="image" name="image">
+				<div class="file-field input-field">
+					<div class="btn waves-effect waves-light orange darken-4">
+						<span>File</span>
+						<input type="file" name="image">
+					</div>
+					<div class="file-path-wrapper">
+						<input class="file-path validate" type="text">
+					</div>
+				</div>
+				<p>
+					<input type="checkbox" id="defimage" name="defimage">
+					<label for="defimage">Default Image</label>
+				</p>
+				<div>
 				<button class="btn waves-effect waves-light orange darken-4" type="submit" name="action">Add Image</button>
+				</div>
 			</form>
 		</div>
 	</div>
+	{% endif %}
+
 </div>
 {% include 'bookrraven/footer_in.html'  %}

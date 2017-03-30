@@ -1,57 +1,70 @@
 {% include 'bookrraven/header_logged_in.html'  %}
-	<div id="wrapper">
-		<div id="links">
-			<!-- venues takes a venues_list -->
-			Venues: <a href="">Sample Venue Link</a>
-			<!-- events needs an event_list -->
-			Upcoming Events: <a href="">Sample Event</a>
-			<!-- requests needs a requests_list -->
-			Recent Requests: 
+{% load staticfiles %}
+	<main class="container section">
+		<div class="row">
+			<section class="col s12 m6 l6">
+				{% if venueProfile %}
+				<h3>{{venueProfile.venue_name}}</h3>
+				{% if venueImage %}
+				<img class="photo" src="{{venueImage.image.url}}">
+				{% endif %}
+				{% else %}
+				<h4>Please Create Your Venue Profile</h4>
+				{% endif %}
+			</section>
+			<section class="col s12 m4 l4 offset-l1">
+				{% if messages %}
+				{% for message in messages %}
+				<p>{{message}}</p>
+				{% endfor %}
+				{% endif %}
+				<h4>Pending Events</h4>
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th>Date</th>
+							<th>Artist Name</th>
+							<th>New Message</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for event in venueEvents %}
+						{% if event.status == "Pend" %}
+						<tr>
+							<td><a href="/event/{{event.id}}" class="btn-floating btn waves-effect waves-light red orange darken-4"><i class="material-icons">mode_edit</i></a></td>
+							<td>{{event.event_date}}</td>
+							<td>{{event.artist_id.artist_name}}</td>
+							<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check'{% endif %}{% endfor %}></td>
+						</tr>
+						{% endif %}
+						{% endfor %}
+					</tbody>
+				</table>
+				<h4>Accepted Events</h4>
+				<table>
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Artist Name</th>
+							<th>Event</th>
+							<th>New Message</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for event in venueEvents %}
+						{% if event.status == "Acpt" %}
+						<tr>
+							<td>{{event.event_date}}</td>
+							<td>{{event.artist_id.artist_name}}</td>
+							<td><a href="/event/{{event.id}}" class="btn waves-effect waves-light orange darken-4">Details</a></td>
+							<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check'{% endif %}{% endfor %}></td>
+						</tr>
+						{% endif %}
+						{% endfor %}
+					</tbody>
+				</table>
+			</section>
 		</div>
-		<a href=""><button>LOGOUT</button></a>
-		
-		<a href="#modal_add_venue"><button>Book Me!</button></a>
-		<div class="modal" id="modal_add_venue">
-			
-			<form action="" method="post" >
-				  {% csrf_token %}
-				  <div class="modal-content">
-				  <input type="hidden" name="{{user.id}}">
-					  <select name="venue_name">
-					  	{% for venue in venues %}
-					  	<option value="{{venue.name}}" >{{venue.name}}</option>
-					  	{% endfor %}
-					  </select>
-					<input type="submit" value="Select Venue" />
-				  </div>
-			</form>
-			<input type="checkbox"  id="add_new_venue" class="ibtn">
-			<form action="" method="post" >
-				  {% csrf_token %}
-				  <div class="modal-content">
-				  <input type="hidden" name="{{user.id}}">
-					  <label for="venue_name"> Venue Name: 
-					    <input type="text" id="venue_name" name="venue_name">
-					  </label>
-					   <label for="address"> Venue Name: 
-					    <input type="text" id="address" name="address">
-					  </label>
-					   <select name="city">
-					  	{% for city in cities %}
-					  	<option value="{{city.city}}" >{{city.city}}</option>
-					  	{% endfor %}
-					  </select>
-					   <select name="state">
-					  	{% for state in states %}
-					  	<option value="{{state.state}}" >{{state.state}}</option>
-					  	{% endfor %}
-					  </select>
-					   <label for="phone"> Venue Name: 
-					    <input type="tel" id="phone" name="phone">
-					  </label>
-					  <input type="submit" value="Add Venue" />
-				  </div>
-			</form>
-		</div>
-	</div>
-{% include 'bookrraven/footer.html'  %}
+	</main>
+{% include 'bookrraven/footer_in.html'  %}

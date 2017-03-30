@@ -11,48 +11,107 @@
 	<link rel="stylesheet" type="text/css" href="{% static 'bookr/css/style.css' %}">
 </head>
 <body class="blue-grey">
-	{% if request.user.groups == 'ART' %}
-	<nav class="orange darken-3">
-		<div class="nav-Wrapper">
-			<div class="container">
-				<div id="logo-container" class="brand-logo logo left"></div>
-				<ul class="right">
-				<li><a href="{% url 'brr-artdashboard' %}">WELCOME {{request.user.first_name}}</a></li>
-				<li><a href="{% url 'brr-venueindex' %}">Venues</a></li>
-				<li><a href="{% url 'brr-artistindex' %}">Artists</a></li>
-				{% if artistInfo == None %}
-				<li class="link modal-trigger" data-target="new_artist">Create Artist Profile</li>
-				{% else %}
-				<li><a href="{% url 'brr-artistinfo' artistInfo.id %}">Artist Profile</a></li>
-				{% endif %}
-				<li><a href="{% url 'brr-logout' %}">Logout</a></li>
-			</ul>
+	<header>
+		<nav class="orange darken-3">
+			<div class="nav-Wrapper">
+				<div class="container">
+					<div id="logo-container" class="brand-logo logo left"></div>
+					<ul class="right">
+						{% if request.user.groups == 'ART' %}
+						<li><a href="{% url 'brr-artdashboard' %}">WELCOME {{request.user.first_name}}</a></li>
+						{% elif request.user.groups == 'BKR' %}
+						<li><a href="{% url 'brr-bkrdashboard' %}">WELCOME {{request.user.first_name}}</a></li>
+						{% endif %}
+						<li><a href="{% url 'brr-venueindex' %}">Venues</a></li>
+						<li><a href="{% url 'brr-artistindex' %}">Artists</a></li>
+						{% if request.user.groups == 'ART' and artistInfo == None %}
+						<li class="link modal-trigger" data-target="new_artist">Create Artist Profile</li>
+						{% elif request.user.groups == 'ART' %}
+						<li><a href="{% url 'brr-artistinfo' artistInfo.id %}">Artist Profile</a></li>
+						{% endif %}
+						{% if request.user.groups == 'BKR' and venueProfile == None %}
+						<li class="link modal-trigger" data-target="new_venue">Create Venue Profile</li>
+						{% elif request.user.groups == 'BKR' %}
+						<li><a href="{% url 'brr-venueinfo' venueProfile.id %}">Venue Profile</a></li>
+						{% endif %}
+						<li><a href="{% url 'brr-logout' %}">Logout</a></li>
+					</ul>
+				</div>
 			</div>
-		</div>
-	</nav>
-	{% elif request.user.groups == 'BKR' %}
-	<nav class="orange darken-3">
-		<div class="nav-Wrapper">
-			<div class="container">
-				<div id="logo-container" class="brand-logo logo left"></div>
-				<ul class="right">
-				<li><a href="{% url 'brr-bkrdashboard' %}">Welcome {{request.user.first_name}}</a></li>
-				<li><a href="{% url 'brr-venueindex' %}">Venues</a></li>
-				<li><a href="{% url 'brr-artistindex' %}">Artists</a></li>
-				<li><a href="{% url 'brr-logout' %}">Logout</a></li>
-			</ul>
-			</div>
-		</div>
-	</nav>
-	{% endif %}
+		</nav>
+	</header>
+	{% if request.user.groups == 'ART' and artistInfo == None %}
 	<div id=new_artist class="modal">
 		<div class="modal-content">
 		<h4 class="orange-text darken-4">Artist Profile</h4>
 			<form enctype="multipart/form-data" action="{% url 'brr-addartist' %}" method="post">
 				{% csrf_token %}
 				{{artistform.as_p}}
-				{{artimgform.as_p}}
+				<div class="file-field input-field">
+					<div class="btn waves-effect waves-light orange darken-4">
+						<span>Default Artist Image</span>
+						<input type="file" name="image">
+					</div>
+					<div class="file-path-wrapper">
+						<input class="file-path validate" type="text">
+					</div>
+				</div>
 				<button class="btn waves-effect waves-light orange darken-4 right" type="submit" name="action">Create</button>
 			</form>
 		</div>
 	</div>
+	{% endif %}
+	{% if request.user.groups == 'BKR' and venueProfile == None %}
+	<div id=new_venue class="modal">
+		<div class="modal-content">
+		<h4 class="orange-text darken-4">Venue Profile</h4>
+			<form enctype="multipart/form-data" action="{% url 'brr-addvenue' %}" method="post">
+				{% csrf_token %}
+				{{venueForm.as_p}}
+				<div class="file-field input-field">
+					<div class="btn waves-effect waves-light orange darken-4">
+						<span>Default Venue Image</span>
+						<input type="file" name="image">
+					</div>
+					<div class="file-path-wrapper">
+						<input class="file-path validate" type="text">
+					</div>
+				</div>
+				<button class="btn waves-effect waves-light orange darken-4 right" type="submit" name="action">Create</button>
+			</form>
+		</div>
+	</div>
+	{% endif %}
+	{% if request.user.groups == 'ART' and artistInfo %}
+	<div id='modal_book_venue' class="modal">
+		<div class="modal-content">
+			<h4>{{venueProfile.venue_name}}</h4>
+			<h5>Contact: {{venueProfile.contact_id.first_name}} {{venueProfile.contact_id.last_name}}</h5>
+			<form enctype="multipart/form-data" action="{% url 'brr-event' %}" method="post">
+					{% csrf_token %}
+				<input type="hidden" name="artist_id" value="{{artistInfo.id}}">
+				<input type="hidden" name="venue_id" value="{{venueProfile.id}}">
+				{{eventForm.as_p}}
+				{{messageForm.as_p}}
+				<button class="btn waves-effect waves-light orange darken-4" type="submit" name="action">Send Request</button>
+			</form>
+		</div>
+	</div>
+	{% endif %}
+	{% if request.user.groups == "BKR" and venueProfile %}
+	<button class="btn waves-effect waves-light orange darken-3 modal-trigger" data-target="modal_book_artist">Book Artist</button>
+	<div id='modal_book_artist' class="modal">
+		<div class="modal-content">
+			<h4>{{artistInfo.artist_name}}</h4>
+			<h5>Contact: {{artistInfo.contact_id.first_name}} {{artistInfo.contact_id.last_name}}</h5>
+			<form enctype="multipart/form-data" action="{% url 'brr-event' %}" method="post">
+					{% csrf_token %}
+				<input type="hidden" name="artist_id" value="{{artistInfo.id}}">
+				<input type="hidden" name="venue_id" value="{{venueProfile.id}}">
+				{{eventForm.as_p}}
+				{{messageForm.as_p}}
+				<button class="btn waves-effect waves-light orange darken-4" type="submit" name="action">Send Request</button>
+			</form>
+		</div>
+	</div>
+	{% endif %}

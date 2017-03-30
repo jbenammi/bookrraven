@@ -3,11 +3,15 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-from .models import Artist, Venue, Event, MyUser
+from .models import Artist, VenueList, Event, MyUser, ArtistImages, VenueImages, Message
 
 admin.site.register(Artist)
-admin.site.register(Venue)
+admin.site.register(VenueList)
 admin.site.register(Event)
+admin.site.register(Message)
+admin.site.register(ArtistImages)
+admin.site.register(VenueImages)
+
 
 class UserCreationForm(forms.ModelForm):
     BOOKER = 'BKR'

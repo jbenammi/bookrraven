@@ -1,11 +1,19 @@
 {% include 'bookrraven/header_logged_in.html'  %}
-	<div id="wrapper">
-		<div class="container section">
-			<div id="venue_content">
+		<main class="container section">
+			<section class="row">
+				<h2 class="col s12 m6 l6 profile-heading">{{venueInfo.venue_name}}</h2>
+				{% if request.user.groups == "ART" %}
+				<div class="col s12 m6 l6 top-margin-3 btm-margin-2">
+					<button class="btn waves-effect waves-light orange darken-4 right modal-trigger" data-target="modal_book_venue">Request to play venue</button>
+				</div>
+				{% endif %}
 				<!-- stuff about the venue -->
-				<img src="{{get_venue.venue_photo.path}}" alt="we tried....">
-				<p>{{get_venue.venue_name}}</p>
-			</div>
+				<div class="col s12 m6 m6" style="overflow-y: scroll; height: 400px;">
+					{% for img in venueImages %}
+					<img src="{{img.image.url}}" alt="{{artistInfo.venue_name}}" height="100px">
+					{% endfor %}
+				</div>
+			</section>
 			<div id="brr-content">
 				<!-- upcoming event_list -->
 				<ul>
@@ -13,8 +21,34 @@
 					<li><a href="">Look, an Event!</a></li>
 					<li><a href="">Look, an Event!</a></li>
 				</ul>
-				<a href=""><button>PLAY HERE!</button></a>
 			</div>
 		</div>
-	</div>
-{% include 'bookrraven/footer.html'  %}
+		{% if request.user.groups == "BKR" and venueInfo.contact_id.id == request.user.id %}
+		<button class="btn waves-effect waves-light orange darken-3 modal-trigger" data-target="modal_AddImg">Add Image</button>
+		<div id='modal_AddImg' class="modal">
+			<div class="modal-content">
+				<form enctype="multipart/form-data" action="{% url 'brr-addimage' %}" method="post">
+					{% csrf_token %}
+					<input type="hidden" name="venue_id" value="{{venueProfile.id}}">
+					<div class="file-field input-field">
+						<div class="btn waves-effect waves-light orange darken-4">
+							<span>File</span>
+							<input type="file" name="image">
+						</div>
+						<div class="file-path-wrapper">
+							<input class="file-path validate" type="text">
+						</div>
+					</div>
+					<p>
+						<input type="checkbox" id="defimage" name="defimage">
+						<label for="defimage">Default Image</label>
+					</p>
+					<div>
+						<button class="btn waves-effect waves-light orange darken-4" type="submit" name="action">Add Image</button>
+					</div>
+				</form>
+			</div>
+		</div>
+		{% endif %}
+	</main>
+{% include 'bookrraven/footer_in.html'  %}
