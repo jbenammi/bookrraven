@@ -5,7 +5,80 @@
 	-webkit-margin-start: 0px;
 	-webkit-margin-end: 0px;
 	padding: 0px;
-	/*border: 1px dotted green;*/
+}
+
+/* Color, Font and Text */
+
+.color-base-0 {
+	background: rgba(100, 100, 100, 0.5);
+	background-repeat: no-repeat;
+	height: 100%;
+}
+
+.bg-primary-0 { background-color: #C20A00 !important}	/* Main Primary background color */
+.bg-primary-1 { background-color: #FF0D00 !important}
+.bg-primary-2 { background-color: #E90C00 !important}
+.bg-primary-3 { background-color: #9A0800 !important}
+.bg-primary-4 { background-color: #640500 !important}
+
+.text-primary-0 { color: #C20A00 !important}	/* Main Primary color */
+.text-primary-1 { color: #FF0D00 !important}
+.text-primary-2 { color: #E90C00 !important}
+.text-primary-3 { color: #9A0800 !important}
+.text-primary-4 { color: #640500 !important}
+
+
+.bg-secondary-1-0 { background-color: #C27C00 !important}	/* Main Secondary background color (1) */
+.bg-secondary-1-1 { background-color: #FFA200 !important}
+.bg-secondary-1-2 { background-color: #E99400 !important}
+.bg-secondary-1-3 { background-color: #9A6200 !important}
+.bg-secondary-1-4 { background-color: #644000 !important}
+
+.text-secondary-1-0 { color: #C27C00 !important}	/* Main Secondary text color (1) */
+.text-secondary-1-1 { color: #FFA200 !important}
+.text-secondary-1-2 { color: #E99400 !important}
+.text-secondary-1-3 { color: #9A6200 !important}
+.text-secondary-1-4 { color: #644000 !important}
+
+.bg-secondary-2-0 { background-color: #6A0180 !important}	/* Main Secondary background color (2) */
+.bg-secondary-2-1 { background-color: #9700B7 !important}
+.bg-secondary-2-2 { background-color: #7F0099 !important}
+.bg-secondary-2-3 { background-color: #540165 !important}
+.bg-secondary-2-4 { background-color: #360142 !important}
+
+.text-secondary-2-0 { color: #6A0180 !important}	/* Main Secondary background color (2) */
+.text-secondary-2-1 { color: #9700B7 !important}
+.text-secondary-2-2 { color: #7F0099 !important}
+.text-secondary-2-3 { color: #540165 !important}
+.text-secondary-2-4 { color: #360142 !important}
+
+.border-light-primary {
+	border: 4px solid #E90C00;
+}
+.border-dark-primary {
+	border: 4px solid #640500;
+}
+.border-light-secondary-1 {
+	border: 4px solid #FFA200;
+}
+.border-dark-secondary-1 {
+	border: 4px solid #644000;
+}
+.border-light-secondary-2{
+	border: 4px solid #9700B7;
+}
+.border-dark-secondary-2 {
+	border: 4px solid #360142;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+/* Placement and Sizing */
+.container {
+	width: 90%;
+	margin: 0% auto;
 }
 
 #message h6.v-align-btm {
@@ -18,52 +91,49 @@
 .top-margin-3 {
 	margin-top: 3%;
 }
+.top-margin-5 {
+	margin-top: 5%;
+}
 .btm-margin-2 {
 	margin-bottom: 2%;
 }
-
-.container {
-	width: 90%;
-	margin: 0% auto;
+.btm-margin-3 {
+	margin-bottom: 3%;
+}
+.btm-margin-5 {
+	margin-bottom: 5%;
+}
+.spacing {
+	height: 50px;
 }
 
-.logo {
-	background: url("/static/bookr/images/BookRRaven_light.png");
-	background-position: center;
-	background-size: contain;
-	background-repeat: no-repeat;
-	width: 20%;
-}
-
-.check {
-	background: url("/static/bookr/images/checkmark-2.png");
-	background-position: left;
-	background-size: 10%;
-	background-repeat: no-repeat;
-}
-
-.logo, .logo a{
-	height: 64px;
-	display: inline-block;
-}
-
-.logo a {
-	width: 100%;
-}
-
-#landing_menu {
-	margin-top: 5%;
-}
-
-.photo {
-	width: 100%;
-	background: black;
-}
-
+/* Element Specifics */
 body {
-  margin: 0;
-  background: #000;
+	display: flex;
+	min-height: 100vh;
+	flex-direction: column;
+	margin: 0;
+	background: #000;
 }
+
+main {
+	flex: 1 0 auto;
+}
+
+footer ul li {
+	display: inline-block;
+	padding: 5px 10px 5px 5px;
+}
+	footer ul li:not(:last-of-type){
+		border-right: 5px double #640500;
+	}
+	footer ul li:first-of-type{
+		padding: 5px 10px 5px 0px;
+	}
+	footer ul li a {
+		color: #FFFFFF;
+	}
+
 video {
     position: fixed;
     top: 50%;
@@ -82,28 +152,111 @@ video {
    opacity: .5;
 }
 
-@media screen and (max-width: 500px) {
-  div{width:70%;}
-}
-@media screen and (max-device-width: 800px) {
-  html { background: url({% static 'bookr/img/Band.jpg' %}) #000 no-repeat center center fixed; }
-  #bgvid { display: none; }
+table {
+	border-collapse: initial;
 }
 
-/* Medium Setting*/
-@media only screen and (min-width: 601px) {
+td {
+	padding: 2px;
+}
 
-	.profile-heading {
-		text-align: center;
+.row th.col {
+	padding-left: 0px;
+	padding-right: 20px;
+	text-align: center;
+}
+
+.logo {
+	background: url("/static/bookr/images/BookRRaven_light.png");
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 100%;
+}
+
+.check {
+	background: url("/static/bookr/images/checkmark-2.png");
+	background-position: center;
+	background-size: 20%;
+	background-repeat: no-repeat;
+}
+
+.index-table {
+	height: 300px;
+	overflow-y: auto;
+}
+
+.col td.pad-top-12 {
+	padding-top: 12px;
+}
+
+.col td.pad-left-0 {
+	padding-left: 0px;
+}
+
+nav .logo, .logo a{
+	height: 64px;
+}
+	nav .logo a {
+		width: 100%;
 	}
+
+.img-100 {
+	height: 100px;
 }
 
-/* Large Setting */
-@media only screen and (min-width: 993px) {
+.venue-header, .artist-header {
+	font-size: 1.8rem;
+	margin-bottom: 20px;
+}
 
-	.profile-heading {
-		text-align: left;
-	}
+.venue-image, .artist-image, .photo {
+	width: 100%;
+}
+
+.col.message-l {
+	border-radius: 5px 30px;
+	padding: 1% 4%;
+}
+
+.col.message-r {
+	border-radius: 30px 5px;
+	padding: 1% 4%;
+}
+
+label, .label {
+	font-size: 1rem;
+	font-weight: bold;
+	color: #9A6200;
+}
+
+textarea {
+	background: #FFFFFF;
+	border-radius: 3px;
+	padding: 5px;
+	height: 5rem;
+}
+
+.btn {
+	height: 44px;
+}
+
+.eventinfo, .eventinfo i{
+	padding: 0px 4px;
+	font-size: 1rem;
+	border-radius: 8px 15px;
+}
+
+.profile-heading {
+	border-left: 5px double #9A0800;
+	border-bottom: 5px double #9A0800;
+	padding: 10px;
+	text-align: center;
+}
+
+.image-box {
+	overflow-y: auto;
+	height: 400px;
 }
 
 .errorlist {
@@ -112,25 +265,52 @@ video {
   color: #FF0000;
 }
 
-div#modal_book_artist {
-	height: 90%;
-	width: 30%;
+/* Screen Size Specific Settings */
+
+/* phone and mobile */
+@media screen and (max-width: 500px) {
+	nav div.brand-logo {
+		float: right;
+	}
 }
 
-td {
-	padding: 2px;
+/* Medium Setting*/
+@media only screen and (min-width: 601px) {
+	.venue-header, .artist-header {
+		height: 3rem;
+		font-size: 1rem;
+	}
+	.col td.pad-top-12 {
+		padding-top: 0px;
+	}
 }
 
-.picker__date-display, .picker__day--selected,
-.picker__day--selected:hover,
-.picker--focused .picker__day--selected {
-	background-color: #ff6d00;
+/* Large Setting */
+@media only screen and (min-width: 993px) {
+	nav .logo {
+		width: 300px;
+	}
+	.profile-heading {
+		border-left: 5px double #9A0800;
+		border-bottom: 5px double #9A0800;
+		padding: 10px;
+		text-align: left;
+	}
+	.venue-header, .artist-header {
+		height: 50px;
+		font-size: 1.5rem;
+	}
+	.col td.pad-top-12 {
+		padding-top: 10px;
+	}
 }
 
-.picker__today, .picker__close {
-	color: #ff6d00;
-}
-
-.picker__weekday-display {
-	background-color: #e65100;
+/* Tablet and small screens */
+@media screen and (max-device-width: 800px) {
+	html {
+		background: url({% static 'bookr/img/Band.jpg' %}) #000 no-repeat center center fixed;
+	}
+	#bgvid {
+		display: none;
+	}
 }

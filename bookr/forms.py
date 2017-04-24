@@ -12,12 +12,13 @@ class brrLogForm(forms.Form):
         fields = ['username', 'password']
 
 class ArtistForm(forms.ModelForm):
-    artist_name = forms.CharField(label='Artist Name', widget=forms.widgets.TextInput)
+    artist_name = forms.CharField(label='Artist Name', required=True, widget=forms.widgets.TextInput)
+    bio = forms.CharField(label="Biography", required=True, widget=forms.widgets.Textarea(attrs={'row': '8', 'col': '80'}))
     site = forms.URLField(label='Website', widget=forms.widgets.TextInput, required=False)
     sound = forms.URLField(label='Sample Sound', widget=forms.widgets.TextInput, required=False)
     class Meta:
         model = Artist
-        fields = ['artist_name', 'site', 'sound']
+        fields = ['artist_name', 'bio', 'site', 'sound']
 
 class VenueForm(forms.ModelForm):
     STATE_CHOICES = (

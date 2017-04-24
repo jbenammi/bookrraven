@@ -1,7 +1,62 @@
 {% include 'bookrraven/header_logged_in.html'  %}
-		<main class="container section">
-      <form action="{% url 'brr-message' %}" method="post">
-
-      </form>
-    </main>
+{% load staticfiles %}
+	<main class="container section">
+		<section class="row">
+			<form class="col s12 m6 l6" action="{% url 'brr-message' %}" method="post">
+				{% csrf_token %}
+				<input type="hidden" name="event_id" value="{{eventInfo.id}}">
+				{{messageForm.as_p}}
+				<button class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2" type="submit">Message</button>
+			</form>
+			<form id="eventForm" class="col s12 m6 l6" action="{% url 'brr-eventinfo' eventInfo.id %}" method="post">
+				{% csrf_token %}
+				<table>
+					<tbody>
+						<tr>
+							<td class="label">Requestor:</td>
+							<td>{{eventInfo.requestor_id.first_name}} {{eventInfo.requestor_id.last_name}}</td>
+						</tr>
+						<tr>
+							<td class="label">Venue:</td>
+							<td>{{eventInfo.venue_id.venue_name}}</td>
+						</tr>
+						<tr>
+							<td class="label">Artist:</td>
+							<td>{{eventInfo.artist_id.artist_name}}</td>
+						</tr>
+						<tr>
+							<td class="label">Event Date</td>
+							<td><input id="event_date" type="date" name="event_date" value="{{eventInfo.event_date|date:'c'}}" min="{{today|date:'Y-m-d'}}"></td>
+						</tr>
+						<tr>
+							<td class="label">Status</td>
+							<td>
+								<select class="" name="status">
+								<option {% if eventInfo.status == "Pend" %} selected {% endif %} value="Pend">Pending</option>
+								<option {% if eventInfo.status == "Acpt" %} selected {% endif %} value="Acpt">Accepted</option>
+								<option {% if eventInfo.status == "Decl" %} selected {% endif %} value="Decl">Declined</option>
+								</select></td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</section>
+		<section class="section">
+			{% for message in eventMessages %}
+			<div class="row">
+				{% if message.author_id == message.event_id.requestor_id %}
+				<div class="col s12 m6 offset-m6 l6 offset-l6 bg-secondary-1-2 border-dark-secondary-1 message-r">
+					<p class="right-align bold">{{message.author_id.first_name}} {{message.author_id.last_name}} || {{message.created_at}}</p>
+					<p class="right-align">{{message.message}}</p>
+				</div>
+				{% else %}
+				<div class="col s12 m6 l6 bg-primary-2 border-dark-primary message-l">
+					<p class="bold">{{message.created_at}} || {{message.author_id.first_name}} {{message.author_id.last_name}}</p>
+					<p>{{message.message}}</p>
+				</div>
+				{% endif %}
+			</div>
+			{% endfor %}
+		</section>
+  </main>
 {% include 'bookrraven/footer_in.html'  %}

@@ -1,54 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="color-base-0">
 <head>
 	{% load staticfiles %}
 	<meta charset="UTF-8">
 	<meta name="author" content="Jonathan Ben-Ammi">
-	<title>BookRRaven</title>
-	<meta name="description" content="Where venues find tallent">
+	<title>BookRRaven.com</title>
+	<meta name="description" content="Where venues and artists meet">
 	<link rel="stylesheet" type="text/css" href="{% static 'bookr/css/materialize.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'bookr/css/materialize_icons.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'bookr/css/style.css' %}">
 </head>
-<body class="blue-grey">
+<body class="transparent">
 	<header>
-		<nav class="orange darken-3">
+		<nav class="bg-primary-0">
 			<div class="nav-Wrapper">
-				<div class="container">
-					<div id="logo-container" class="brand-logo logo left"></div>
-					<ul class="right">
-						{% if request.user.groups == 'ART' %}
-						<li><a href="{% url 'brr-artdashboard' %}">WELCOME {{request.user.first_name}}</a></li>
-						{% elif request.user.groups == 'BKR' %}
-						<li><a href="{% url 'brr-bkrdashboard' %}">WELCOME {{request.user.first_name}}</a></li>
-						{% endif %}
-						<li><a href="{% url 'brr-venueindex' %}">Venues</a></li>
-						<li><a href="{% url 'brr-artistindex' %}">Artists</a></li>
-						{% if request.user.groups == 'ART' and artistInfo == None %}
-						<li class="link modal-trigger" data-target="new_artist">Create Artist Profile</li>
-						{% elif request.user.groups == 'ART' %}
-						<li><a href="{% url 'brr-artistinfo' artistInfo.id %}">Artist Profile</a></li>
-						{% endif %}
-						{% if request.user.groups == 'BKR' and venueProfile == None %}
-						<li class="link modal-trigger" data-target="new_venue">Create Venue Profile</li>
-						{% elif request.user.groups == 'BKR' %}
-						<li><a href="{% url 'brr-venueinfo' venueProfile.id %}">Venue Profile</a></li>
-						{% endif %}
-						<li><a href="{% url 'brr-logout' %}">Logout</a></li>
-					</ul>
-				</div>
+				<a id="logo-container" class="brand-logo logo"></a>
+				<a href="#" data-activates="sideNav" class="button-collapse"><i class="material-icons">menu</i></a>
+				<ul class="right hide-on-med-and-down">
+					{% if request.user.groups == 'ART' %}
+					<li><a href="{% url 'brr-artdashboard' %}">WELCOME {{request.user.first_name}}</a></li>
+					{% elif request.user.groups == 'BKR' %}
+					<li><a href="{% url 'brr-bkrdashboard' %}">WELCOME {{request.user.first_name}}</a></li>
+					{% endif %}
+					<li><a href="{% url 'brr-venueindex' %}">Venues</a></li>
+					<li><a href="{% url 'brr-artistindex' %}">Artists</a></li>
+					{% if request.user.groups == 'ART' %}
+					{% with artist=user.artist_contact.all %}
+					{% if artist %}
+					<li><a href="{% url 'brr-artistinfo' artist.0.id %}">Artist Profile</a></li>
+					{% else %}
+					<li class="link modal-trigger" data-target="new_artist">Create Artist Profile</li>
+					{% endif %}
+					{% endwith %}
+					{% endif %}
+					{% if request.user.groups == 'BKR' %}
+					{% with venue=user.venue_contact.all %}
+					{% if venue %}
+					<li><a href="{% url 'brr-venueinfo' venue.0.id %}">Venue Profile</a></li>
+					{% else %}
+					<li class="link modal-trigger" data-target="new_venue">Create Venue Profile</li>
+					{% endif %}
+					{% endwith %}
+					{% endif %}
+					<li><a href="{% url 'brr-logout' %}">Logout</a></li>
+				</ul>
+				<ul class="side-nav" id="sideNav">
+					{% if request.user.groups == 'ART' %}
+					<li><a href="{% url 'brr-artdashboard' %}">WELCOME {{request.user.first_name}}</a></li>
+					{% elif request.user.groups == 'BKR' %}
+					<li><a href="{% url 'brr-bkrdashboard' %}">WELCOME {{request.user.first_name}}</a></li>
+					{% endif %}
+					<li><a href="{% url 'brr-venueindex' %}">Venues</a></li>
+					<li><a href="{% url 'brr-artistindex' %}">Artists</a></li>
+					{% if request.user.groups == 'ART' %}
+					{% with artist=user.artist_contact.all %}
+					{% if artist %}
+					<li><a href="{% url 'brr-artistinfo' artist.0.id %}">Artist Profile</a></li>
+					{% else %}
+					<li class="link modal-trigger" data-target="new_artist">Create Artist Profile</li>
+					{% endif %}
+					{% endwith %}
+					{% endif %}
+					{% if request.user.groups == 'BKR' %}
+					{% with venue=user.venue_contact.all %}
+					{% if venue %}
+					<li><a href="{% url 'brr-venueinfo' venue.0.id %}">Venue Profile</a></li>
+					{% else %}
+					<li class="link modal-trigger" data-target="new_venue">Create Venue Profile</li>
+					{% endif %}
+					{% endwith %}
+					{% endif %}
+					<li><a href="#modal_about">About</a></li>
+					<li><a href="{% url 'brr-logout' %}">Logout</a></li>
+				</ul>
 			</div>
 		</nav>
 	</header>
-	{% if request.user.groups == 'ART' and artistInfo == None %}
+	{% if request.user.groups == 'ART'%}
+	{% with artist=user.artist_contact.all %}
+	{% if not artist %}
+	<!-- Modal for adding artist profile  -->
 	<div id=new_artist class="modal">
 		<div class="modal-content">
-		<h4 class="orange-text darken-4">Artist Profile</h4>
+		<h4 class="text-secondary-1-3">Artist Profile</h4>
 			<form enctype="multipart/form-data" action="{% url 'brr-addartist' %}" method="post">
 				{% csrf_token %}
-				{{artistform.as_p}}
+				{{artistForm.as_p}}
 				<div class="file-field input-field">
-					<div class="btn waves-effect waves-light orange darken-4">
+					<div class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2">
 						<span>Default Artist Image</span>
 						<input type="file" name="image">
 					</div>
@@ -56,12 +95,20 @@
 						<input class="file-path validate" type="text">
 					</div>
 				</div>
-				<button class="btn waves-effect waves-light orange darken-4 right" type="submit" name="action">Create</button>
+				<button class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2 right" type="submit" name="action">Create</button>
 			</form>
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+			</div>
 		</div>
 	</div>
 	{% endif %}
-	{% if request.user.groups == 'BKR' and venueProfile == None %}
+	{% endwith %}
+	{% endif %}
+	{% if request.user.groups == 'BKR'%}
+	{% with venue=user.venue_contact.all %}
+	{% if not venue %}
+	<!-- Modal for adding venue profile  -->
 	<div id=new_venue class="modal">
 		<div class="modal-content">
 		<h4 class="orange-text darken-4">Venue Profile</h4>
@@ -69,7 +116,7 @@
 				{% csrf_token %}
 				{{venueForm.as_p}}
 				<div class="file-field input-field">
-					<div class="btn waves-effect waves-light orange darken-4">
+					<div class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2">
 						<span>Default Venue Image</span>
 						<input type="file" name="image">
 					</div>
@@ -77,12 +124,20 @@
 						<input class="file-path validate" type="text">
 					</div>
 				</div>
-				<button class="btn waves-effect waves-light orange darken-4 right" type="submit" name="action">Create</button>
+				<button class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2 right" type="submit" name="action">Create</button>
 			</form>
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+			</div>
 		</div>
 	</div>
 	{% endif %}
-	{% if request.user.groups == 'ART' and artistInfo %}
+	{% endwith %}
+	{% endif %}
+	{% if request.user.groups == 'ART'%}
+	{% with artist=user.artist_contact.all %}
+	{% if artist %}
+	<!-- Modal for artist to request to book with a venue  -->
 	<div id='modal_book_venue' class="modal">
 		<div class="modal-content">
 			<h4>{{venueProfile.venue_name}}</h4>
@@ -93,25 +148,121 @@
 				<input type="hidden" name="venue_id" value="{{venueProfile.id}}">
 				{{eventForm.as_p}}
 				{{messageForm.as_p}}
-				<button class="btn waves-effect waves-light orange darken-4" type="submit" name="action">Send Request</button>
+				<button class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2" type="submit" name="action">Send Request</button>
 			</form>
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+			</div>
 		</div>
 	</div>
 	{% endif %}
-	{% if request.user.groups == "BKR" and venueProfile %}
-	<button class="btn waves-effect waves-light orange darken-3 modal-trigger" data-target="modal_book_artist">Book Artist</button>
+	{% endwith %}
+	{% endif %}
+	{% if request.user.groups == "BKR"%}
+	{% with venue=user.venue_contact.all %}
+	{% if venue %}
+	<!-- Modal for venue to request to book an artist  -->
 	<div id='modal_book_artist' class="modal">
 		<div class="modal-content">
-			<h4>{{artistInfo.artist_name}}</h4>
-			<h5>Contact: {{artistInfo.contact_id.first_name}} {{artistInfo.contact_id.last_name}}</h5>
+			<h4 class="text-primary-3">{{artistInfo.artist_name}}</h4>
+			<h5 class="btm-margin-5"><span class="text-secondary-1-0 bold">Contact:</span> {{artistInfo.contact_id.first_name}} {{artistInfo.contact_id.last_name}}</h5>
 			<form enctype="multipart/form-data" action="{% url 'brr-event' %}" method="post">
 					{% csrf_token %}
 				<input type="hidden" name="artist_id" value="{{artistInfo.id}}">
 				<input type="hidden" name="venue_id" value="{{venueProfile.id}}">
-				{{eventForm.as_p}}
+				<p>
+					<label for="id_event_date">Event Date:</label>
+					<input id="id_event_date" type="date" name="event_date" min="{{today|date:'Y-m-d'}}" required>
+				</p>
 				{{messageForm.as_p}}
-				<button class="btn waves-effect waves-light orange darken-4" type="submit" name="action">Send Request</button>
+				<button class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2" type="submit" name="action">Send Request</button>
+			</form>
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+	{% endwith %}
+	{% endif %}
+	{% if messages %}
+	<!-- Modal for confirm and error messages  -->
+	<div id='modal_messages' class="modal">
+		<div class="modal-content">
+			{% for message in messages %}
+			<p>{{message}}</p>
+			{% endfor %}
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+	<!-- Modal for adding an artist image -->
+	{% if request.user.groups == "ART" and artistInfo.contact_id.id == request.user.id %}
+	<div id='modal_AddImg' class="modal">
+		<div class="modal-content">
+			<form enctype="multipart/form-data" action="{% url 'brr-addimage' %}" method="post">
+				{% csrf_token %}
+				<input type="hidden" name="artist_id" value="{{artistInfo.id}}">
+				<div class="file-field input-field">
+					<div class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2">
+						<span>File</span>
+						<input type="file" name="image">
+					</div>
+					<div class="file-path-wrapper">
+						<input class="file-path validate" type="text">
+					</div>
+				</div>
+				<div class="section">
+					<input type="checkbox" id="defimage" name="defimage">
+					<label for="defimage">Default Image</label>
+				</div>
+				<div>
+				<button class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2" type="submit" name="action">Add Image</button>
+				</div>
+				<div class="modal-footer">
+					<a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+				</div>
 			</form>
 		</div>
 	</div>
 	{% endif %}
+	{% if request.user.groups == "BKR" and venueProfile.contact_id.id == request.user.id %}
+	<div id='modal_AddImg' class="modal">
+		<div class="modal-content">
+			<form enctype="multipart/form-data" action="{% url 'brr-addimage' %}" method="post">
+				{% csrf_token %}
+				<input type="hidden" name="venue_id" value="{{venueProfile.id}}">
+				<div class="file-field input-field">
+					<div class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2">
+						<span>File</span>
+						<input type="file" name="image">
+					</div>
+					<div class="file-path-wrapper">
+						<input class="file-path validate" type="text">
+					</div>
+				</div>
+				<p class="section">
+					<input type="checkbox" id="defimage" name="defimage">
+					<label for="defimage">Default Image</label>
+				</p>
+				<div class="section">
+					<button class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2" type="submit" name="action">Add Image</button>
+				</div>
+				<div class="modal-footer">
+					<a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	{% endif %}
+	<div id="modal_about" class="modal">
+		<div class="modal-content">
+			<h5 class="text-primary-0 profile-heading">About BookRRaven</h5>
+			<p class="section">BookRRaven started as a collaboration between three aspiring developers as a way to showcase their coding talent. Unfinished it was taken up by Jonathan Ben-Ammi to complete and become one of the cornerstones of his coding portfolio. BookRRaven has potential for connecting unsigned artists with venues who want raw tallent. For more information please visit <a href="http://jonathanben-ammi.com" target="_blank">JonathanBen-Ammi.com</a></p>
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+			</div>
+		</div>
+	</div>

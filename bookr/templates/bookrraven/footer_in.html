@@ -1,28 +1,68 @@
 {% load staticfiles %}
-<footer>
-
+<footer class="page-footer bg-primary-0">
+	<div class="container hide-on-med-and-down">
+    <div class="row">
+      <div class="col s12">
+        <h5 class="white-text">Links</h5>
+				<ul>
+					{% if request.user.groups == 'ART' %}
+					<li><a href="{% url 'brr-artdashboard' %}">WELCOME {{request.user.first_name}}</a></li>
+					{% elif request.user.groups == 'BKR' %}
+					<li><a href="{% url 'brr-bkrdashboard' %}">WELCOME {{request.user.first_name}}</a></li>
+					{% endif %}
+					<li><a href="{% url 'brr-venueindex' %}">Venues</a></li>
+					<li><a href="{% url 'brr-artistindex' %}">Artists</a></li>
+					{% if request.user.groups == 'ART' %}
+					{% with artist=user.artist_contact.all %}
+					{% if artist %}
+					<li><a href="{% url 'brr-artistinfo' artist.0.id %}">Artist Profile</a></li>
+					{% else %}
+					<li class="link modal-trigger" data-target="new_artist">Create Artist Profile</li>
+					{% endif %}
+					{% endwith %}
+					{% endif %}
+					{% if request.user.groups == 'BKR' %}
+					{% with venue=user.venue_contact.all %}
+					{% if venue %}
+					<li><a href="{% url 'brr-venueinfo' venue.0.id %}">Venue Profile</a></li>
+					{% else %}
+					<li class="link modal-trigger" data-target="new_venue">Create Venue Profile</li>
+					{% endif %}
+					{% endwith %}
+					{% endif %}
+					<li><a href="#modal_about">About</a></li>
+					<li><a href="{% url 'brr-logout' %}">Logout</a></li>
+				</ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer-copyright">
+    <div class="container">
+    © 2017 Copyright Jonathan Ben-Ammi
+    </div>
+  </div>
 </footer>
 <!-- Begin Scripts -->
 	<script src="{% static 'bookr/js/jquery-2.2.3.js' %}"></script>
 	<script src="{% static 'bookr/js/jquery-ui.js' %}"></script>
 	<script src="{% static 'bookr/js/materialize.js' %}"></script>
-	<script type="text/javascript" src=""></script>
+	{# include 'session_security/all.html' #}
 	<script>
-	$(document).ready(function(){
-		$(function() {
-			$('.datepicker').pickadate({
-		    selectMonths: true, // Creates a dropdown to control month
-		    selectYears: 15 // Creates a dropdown of 15 years to control year
-		  });
-		});
-
-		$('.modal-trigger').leanModal();
-
-
-
-
-	})
-	  </script>
+		$(document).ready(function(){
+			// function needed for collapsable navigation links
+			$(".button-collapse").sideNav();
+			// function needed to open/close modals
+			$('.modal').modal();
+			// function for tracking/making changes to events
+			$('#eventForm').on('change', function() {
+				$('#eventForm').submit()
+			})
+			// function if there are messages to display to triggger modal open
+			{% if messages %}
+			$('#modal_messages').modal().modal('open')
+			{% endif %}
+		})
+  </script>
 <!-- End Scripts -->
 </body>
 </html>

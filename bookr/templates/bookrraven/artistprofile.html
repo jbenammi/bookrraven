@@ -1,47 +1,42 @@
 {% include 'bookrraven/header_logged_in.html'  %}
 {% load staticfiles %}
-<div class="container">
-	<div id="wrapper" >
-		<div class="band-info">
-		<h2 class="white-text">{{artistInfo.artist_name}}</h2>
-		<section style="overflow-y: scroll; height: 400px;">
-			{% for img in artistImages %}
-			<img src="{{img.image.url}}" alt="{{artistInfo.artist_name}}" height="300px">
-			{% endfor %}
+	<main class="container section">
+		<section class="row section" >
+			<div class="col s12 m5 l5 btm-margin-5">
+				<h2 class="profile-heading text-secondary-1-0">{{artistInfo.artist_name}}</h2>
+				<table>
+					<tr class="row">
+						<td class="col s4 label">Biography:</td>
+						<td class="col s8">{{artistInfo.about}}</td>
+					</tr>
+					<tr class="row">
+						<td class="col s4 label">Web site:</td>
+						<td class="col s8"><a class="bold" href="{{artistInfo.site}}" target="_blank">{{artistInfo.site}}</a></td>
+					</tr>
+					<tr class="row">
+						<td class="col s4 label">Sound Sample:</td>
+						<td class="col s8"><a class="bold" href="{{artistInfo.sound}}" target="_blank">{{artistInfo.sound}}</a></td>
+					</tr>
+					<tr class="row">
+						<td class="col s4 label">&nbsp;</td>
+						<td class="col s8">
+							{% if request.user.groups == "BKR" and venueProfile %}
+							<button class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2 modal-trigger top-margin-5" data-target="modal_book_artist">Book Artist</button>
+							{% endif %}
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="col s12 m6 l6 offset-m1 offset-l1 image-box">
+				{% if request.user.groups == "ART" and artistInfo.contact_id.id == request.user.id %}
+				<div class="img-100">
+					<button class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2 modal-trigger" data-target="modal_AddImg">Add Image</button>
+				</div>
+				{% endif %}
+				{% for img in artistImages %}
+				<img class="img-100" src="{{img.image.url}}" alt="{{artistInfo.artist_name}}">
+				{% endfor %}
+			</div>
 		</section>
-		<p><a class="white-text" href="http://{{artistInfo.site}}" target="_blank">{{artistInfo.site}}</a></p>
-		<p class="white-text">{{artistInfo.sound}}</p>
-	</div>
-	{% if request.user.groups == "BKR" and venueProfile %}
-	<button class="btn waves-effect waves-light orange darken-3 modal-trigger" data-target="modal_book_artist">Book Artist</button>
-	{% endif %}
-	{% if request.user.groups == "ART" and artistInfo.contact_id.id == request.user.id %}
-	<button class="btn waves-effect waves-light orange darken-3 modal-trigger" data-target="modal_AddImg">Add Image</button>
-	<div id='modal_AddImg' class="modal">
-		<div class="modal-content">
-			<form enctype="multipart/form-data" action="{% url 'brr-addimage' %}" method="post">
-				{% csrf_token %}
-				<input type="hidden" name="artist_id" value="{{artistInfo.id}}">
-				<div class="file-field input-field">
-					<div class="btn waves-effect waves-light orange darken-4">
-						<span>File</span>
-						<input type="file" name="image">
-					</div>
-					<div class="file-path-wrapper">
-						<input class="file-path validate" type="text">
-					</div>
-				</div>
-				<p>
-					<input type="checkbox" id="defimage" name="defimage">
-					<label for="defimage">Default Image</label>
-				</p>
-				<div>
-				<button class="btn waves-effect waves-light orange darken-4" type="submit" name="action">Add Image</button>
-				</div>
-			</form>
-		</div>
-	</div>
-	{% endif %}
-
-</div>
+	</main>
 {% include 'bookrraven/footer_in.html'  %}

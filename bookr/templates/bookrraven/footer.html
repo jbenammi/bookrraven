@@ -1,37 +1,59 @@
 {% load staticfiles %}
-
+	<footer class="page-footer bg-primary-0">
+		<div class="container hide-on-med-and-down">
+			<div class="row">
+				<div class="col s12">
+					<h5 class="white-text">Links</h5>
+					<ul>
+						<li><a href="#modal_register">Register</a></li>
+						<li><a href="#modal_about">About</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="footer-copyright">
+			<div class="container">
+			© 2017 Copyright Jonathan Ben-Ammi
+			</div>
+		</div>
+	</footer>
 <!-- Begin Scripts -->
 	<script src="{% static 'bookr/js/jquery-2.2.3.js' %}"></script>
 	<script src="{% static 'bookr/js/jquery-ui.js' %}"></script>
 	<script src="{% static 'bookr/js/materialize.js' %}"></script>
-	<script type="text/javascript" src=""></script>
 	<script>
-	$(document).ready(function(){
-		$(function() {
-			$( "#datepicker" ).datepicker({
-				changeMonth: true,
-				changeYear: true
+		$(document).ready(function(){
+
+			$('.modal').modal();
+
+			{% for field in regform %}
+			{% if field.errors %}
+				$('#modal_register').modal().modal('open')
+			{% endif %}
+			{% endfor %}
+
+			{% if messages %}
+			$('#modal_messages').modal().modal('open')
+			{% endif %}
+
+			$(".button-collapse").sideNav();
+
+			var vid = document.getElementById("bgvid");
+
+			function vidFade() {
+			  vid.classList.add("stopfade");
+			}
+
+			vid.addEventListener('ended', function()
+			{
+			// only functional if "loop" is removed
+			vid.pause();
+			// to capture IE10
+			vidFade();
 			});
-		});
 
-		$('.modal-trigger').leanModal();
-
-		var vid = document.getElementById("bgvid");
-		
-		function vidFade() {
-		  vid.classList.add("stopfade");
-		}
-
-		vid.addEventListener('ended', function()
-		{
-		// only functional if "loop" is removed 
-		vid.pause();
-		// to capture IE10
-		vidFade();
-		}); 
-
-	})
-	  </script>
+		})
+  </script>
 <!-- End Scripts -->
 </body>
 </html>

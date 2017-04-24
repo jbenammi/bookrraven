@@ -1,14 +1,15 @@
 {% include 'bookrraven/header_logged_in.html'  %}
-	<div class="container section">
-<!-- ENTER BODY OF CODE HERE -->
-	<h3> Venue Directory</h3>
-
-	{% if venueList %}
-		{% for venue in venueList %}
-
-			<p><a href="{% url 'brr-venueinfo' venue.id %}">{{venue.id}}{{ venue.venue_name}}</a><p>
-		{% endfor %}
-	{% endif %}
-	</div>
-
-{% include 'bookrraven/footer.html'  %}
+	<main class="container section">
+		<h3 class="text-secondary-1-0 profile-heading"> Venue Directory</h3>
+		{% if venueList %}
+		<section class="row section">
+			{% for venue in venueList %}
+				<div class="col s12 m2 l2 btm-margin-5">
+					<h5 class="center-align venue-header"><a href="{% url 'brr-venueinfo' venue.venue.id %}">{{ venue.venue.venue_name}}</a></h5>
+					<a href="{% url 'brr-venueinfo' venue.venue.id %}"><img class="venue-image" src="{{venue.defaultimage.image.url}}"></a>
+				</div>
+			{% endfor %}
+		</section>
+		{% endif %}
+	</main>
+{% include 'bookrraven/footer_in.html'  %}

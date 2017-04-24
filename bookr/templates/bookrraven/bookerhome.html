@@ -4,7 +4,7 @@
 		<div class="row">
 			<section class="col s12 m6 l6">
 				{% if venueProfile %}
-				<h3>{{venueProfile.venue_name}}</h3>
+				<h3 class="text-secondary-1-0 profile-heading">{{venueProfile.venue_name}}</h3>
 				{% if venueImage %}
 				<img class="photo" src="{{venueImage.image.url}}">
 				{% endif %}
@@ -12,58 +12,62 @@
 				<h4>Please Create Your Venue Profile</h4>
 				{% endif %}
 			</section>
-			<section class="col s12 m4 l4 offset-l1">
-				{% if messages %}
-				{% for message in messages %}
-				<p>{{message}}</p>
-				{% endfor %}
-				{% endif %}
-				<h4>Pending Events</h4>
+			<section class="col s12 m6 l5 offset-l1">
+				<h4 class="text-secondary-1-0">Pending Events</h4>
 				<table>
 					<thead>
-						<tr>
-							<th></th>
-							<th>Date</th>
-							<th>Artist Name</th>
-							<th>New Message</th>
+						<tr class="row">
+							<th class="col s2" height="50px"></th>
+							<th class="col s3">Date</th>
+							<th class="col s5">Artist Name</th>
+							<th class="col s2 yes">Message</th>
 						</tr>
 					</thead>
-					<tbody>
-						{% for event in venueEvents %}
-						{% if event.status == "Pend" %}
-						<tr>
-							<td><a href="/event/{{event.id}}" class="btn-floating btn waves-effect waves-light red orange darken-4"><i class="material-icons">mode_edit</i></a></td>
-							<td>{{event.event_date}}</td>
-							<td>{{event.artist_id.artist_name}}</td>
-							<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check'{% endif %}{% endfor %}></td>
-						</tr>
-						{% endif %}
-						{% endfor %}
-					</tbody>
 				</table>
-				<h4>Accepted Events</h4>
+				<div class="index-table">
+					<table>
+						<tbody>
+							{% for event in venueEvents %}
+							{% if event.status == "Pend" %}
+							<tr class="row" height="50px">
+								<td class="col s2 pad-left-0"><a href="/event/{{event.id}}" class="btn waves-effect waves-light bg-secondary-2-4 eventinfo border-light-secondary-2"><i class="material-icons">mode_edit</i></a></td>
+								<td class="col s3 pad-top-12">{{event.event_date}}</td>
+								<td class="col s5 pad-top-12">{{event.artist_id.artist_name}}</td>
+								<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check col s2' {% else %} class="col s2"{% endif %}{% endfor %} height="44px"></td>
+							</tr>
+							{% endif %}
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<h4 class="text-secondary-1-0">Accepted Events</h4>
 				<table>
 					<thead>
-						<tr>
-							<th>Date</th>
-							<th>Artist Name</th>
-							<th>Event</th>
-							<th>New Message</th>
+						<tr class="row">
+							<th class="col s2" height="50px"></th>
+							<th class="col s3">Date</th>
+							<th class="col s5">Artist Name</th>
+							<th class="col s2 yes">Message</th>
 						</tr>
 					</thead>
-					<tbody>
-						{% for event in venueEvents %}
-						{% if event.status == "Acpt" %}
-						<tr>
-							<td>{{event.event_date}}</td>
-							<td>{{event.artist_id.artist_name}}</td>
-							<td><a href="/event/{{event.id}}" class="btn waves-effect waves-light orange darken-4">Details</a></td>
-							<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check'{% endif %}{% endfor %}></td>
-						</tr>
-						{% endif %}
-						{% endfor %}
-					</tbody>
 				</table>
+				<div class="index-table">
+					<table>
+						<tbody>
+							{% for event in venueEvents %}
+							{% if event.status == "Acpt" %}
+							<tr class="row" height="50px">
+								<td class="col s2 pad-left-0"><a href="/event/{{event.id}}" class="btn waves-effect waves-light bg-secondary-2-2 eventinfo border-dark-secondary-2"><i class="material-icons">mode_edit</i></a></td>
+								<td class="col s3 pad-top-12">{{event.event_date}}</td>
+								<td class="col s5 pad-top-12">{{event.artist_id.artist_name}}</td>
+								<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check col s2' {% else %} class="col s2"{% endif %}{% endfor %} height="44px"></td>
+							</tr>
+							{% endif %}
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
 			</section>
 		</div>
 	</main>

@@ -17,6 +17,7 @@ urlpatterns = [
 	url(r'^artist/(?P<artist_id>\d+)', views.SingleArtist.as_view(), name='brr-artistinfo'),
 	url(r'^addimg/$', views.AddImg.as_view(), name='brr-addimage'),
 	url(r'^event/$', views.Events.as_view(), name='brr-event'),
+	url(r'^event/(?P<event_id>\d+)', views.SingleEvent.as_view(), name='brr-eventinfo'),
 	url(r'^message/$', views.Messages.as_view(), name='brr-message'),
 	url(r'^logout/', views.Logout.as_view(), name='brr-logout')
 	# url(r'^test/$', views.Test.as_view(), name='brr-test')

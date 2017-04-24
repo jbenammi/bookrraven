@@ -90,7 +90,7 @@ class Artist(models.Model):
     about = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    contact_id = models.ForeignKey('MyUser', related_name="contact")
+    contact_id = models.ForeignKey('MyUser', related_name="artist_contact")
     def __str__(self):
         return 'ID: %s | Artist: %s | Main Contact: %s' % (self.id, self.artist_name, self.contact_id.email)
 
@@ -170,10 +170,10 @@ class VenueList(models.Model):
 class VenueImages(models.Model):
     image = models.ImageField(null=True, blank=True, upload_to='uploads/%Y/%m/%d/')
     defaultimage = models.BooleanField(default=False)
-    venue = models.ForeignKey('VenueList')
+    venue = models.ForeignKey('VenueList', related_name="venue_image")
 
     def __str__(self):
-        return '\nID: %s | Artist: %s | Default: %s | Image: %s' % (self.venue.id, self.venue.venue_name, self.defaultimage, self.image)
+        return '\nID: %s | Venue: %s | Default: %s | Image: %s' % (self.venue.id, self.venue.venue_name, self.defaultimage, self.image)
 
 class Event(models.Model):
     PENDING = 'Pend'

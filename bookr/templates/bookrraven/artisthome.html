@@ -4,7 +4,7 @@
 		<div class="row">
 			<section class="col s12 m6 l6">
 				{% if artistInfo %}
-				<h4>{{artistInfo.artist_name}}</h4>
+				<h4 class="profile-heading text-secondary-1-0">{{artistInfo.artist_name}}</h4>
 				{% if artistImage %}
 				<img class="photo" src="{{artistImage.image.url}}">
 				{% endif %}
@@ -13,12 +13,7 @@
 				{% endif %}
 			</section>
 			<section class="col s12 m4 l4 offset-l1">
-				{% if messages %}
-				{% for message in messages %}
-				<p>{{message}}</p>
-				{% endfor %}
-				{% endif %}
-				<h4>Pending Events</h4>
+				<h4 class="text-secondary-1-0">Pending Events</h4>
 				<table>
 					<thead>
 						<tr>
@@ -32,7 +27,7 @@
 						{% for event in artistEvents %}
 						{% if event.status == "Pend" %}
 						<tr>
-							<td><a href="/event/{{event.id}}" class="btn-floating btn waves-effect waves-light red orange darken-4"><i class="material-icons">mode_edit</i></a></td>
+							<td><a href="/event/{{event.id}}" class="btn waves-effect waves-light bg-secondary-2-4 eventinfo border-light-secondary-2"><i class="material-icons">mode_edit</i></a></td>
 							<td>{{event.event_date}}</td>
 							<td>{{event.venue_id.venue_name}}</td>
 							<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check'{% endif %}{% endfor %}></td>
@@ -41,7 +36,7 @@
 						{% endfor %}
 					</tbody>
 				</table>
-				<h4>Accepted Events</h4>
+				<h4 class="text-secondary-1-0">Accepted Events</h4>
 				<table>
 					<thead>
 						<tr>
@@ -55,7 +50,7 @@
 						{% for event in artistEvents %}
 						{% if event.status == "Acpt" %}
 						<tr>
-							<td><a href="/event/{{event.id}}" class="btn-floating btn waves-effect waves-light red orange darken-4"><i class="material-icons">mode_edit</i></a></td>
+							<td><a href="/event/{{event.id}}" class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2 eventinfo"><i class="material-icons">mode_edit</i></a></td>
 							<td>{{event.event_date}}</td>
 							<td>{{event.venue_id.venue_name}}</td>
 							<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check'{% endif %}{% endfor %}></td>

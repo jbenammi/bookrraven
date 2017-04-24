@@ -20,10 +20,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '_0$5-kmg(tt)7oqb4ejr^=hc8tch%x3c9y$pj#rvd_m3#fbf6m'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = fail_silently
 
 ALLOWED_HOSTS = []
 
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'session_security',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -49,6 +50,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'session_security.middleware.SessionSecurityMiddleware',
 ]
 
 ROOT_URLCONF = 'bookrraven.urls'
@@ -117,6 +119,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+SESSION_SECURITY_INSECURE = True
 
 
 # Static files (CSS, JavaScript, Images)

@@ -1,9 +1,15 @@
 {% include 'bookrraven/header_logged_in.html'  %}
-	<div class="container section">
-	<h2> Artist Directory</h2>
-		{% for artist in artistList %}
-			<h4><a class="black-text" href="{% url 'brr-artistinfo' artist.id %}">{{artist.artist_name}}</a></h4>
-		{% endfor %}
-<!-- ENTER BODY OF CODE HERE -->
-	</div>
+	<main class="container section">
+		<h3 class="text-secondary-1-0 profile-heading"> Artist Directory</h3>
+		{% if artistList %}
+		<section class="row section">
+			{% for artist in artistList %}
+				<div class="col s12 m2 l2 btm-margin-5">
+					<h5 class="center-align artist-header"><a href="{% url 'brr-artistinfo' artist.artist.id %}">{{artist.artist.artist_name}}</a></h5>
+					<a href="{% url 'brr-artistinfo' artist.artist.id %}"><img class="artist-image" src="{{artist.defaultimage.image.url}}"></a>
+				</div>
+			{% endfor %}
+		</section>
+		{% endif %}
+	</main>
 {% include 'bookrraven/footer_in.html'  %}

@@ -7729,7 +7729,6 @@ var rfocusMorph = /^(?:focusinfocus|focusoutblur)$/;
 jQuery.extend( jQuery.event, {
 
 	trigger: function( event, data, elem, onlyHandlers ) {
-
 		var i, cur, tmp, bubbleType, ontype, handle, special,
 			eventPath = [ elem || document ],
 			type = hasOwn.call( event, "type" ) ? event.type : event,
@@ -7859,7 +7858,6 @@ jQuery.extend( jQuery.event, {
 				}
 			}
 		}
-
 		return event.result;
 	},
 

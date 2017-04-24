@@ -3,9 +3,9 @@
 <head>
 	{% load staticfiles %}
 	<meta charset="UTF-8">
-	<meta name="author" content="Nicole Peoples, Alan Weber, Jonathan Ben-Ammi">
+	<meta name="author" content="Jonathan Ben-Ammi, Nicole Peoples, Alan Weber">
 	<title>BookRRaven</title>
-	<meta name="description" content="Where venues find tallent">
+	<meta name="description" content="Where venues find tallent and artists find places to play">
 	<link rel="stylesheet" type="text/css" href="{% static 'bookr/css/materialize.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'bookr/css/materialize_icons.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'bookr/css/style.css' %}">
@@ -14,13 +14,96 @@
 <video autoplay  poster="{% static 'bookr/img/Band.jpg' %}" id="bgvid">
 <source src="{% static 'bookr/img/Band.mp4' %}" type="video/mp4">
 </video>
-	<nav class="orange darken-3">
-		<div class="nav-Wrapper">
-				<div id="logo-container" class="brand-logo logo left"><a href="/"> </a></div>
-				<ul>
-					<li></li>
-					<li></li>
-					<li></li>
+	<header>
+		<nav class="bg-primary-0">
+			<div class="nav-Wrapper">
+				<a id="logo-container" class="brand-logo logo"></a>
+				<a href="#" data-activates="sideNav" class="button-collapse"><i class="material-icons">menu</i></a>
+				<ul class="right hide-on-med-and-down">
+					<li><a href="#modal_register">Register</a></li>
 				</ul>
+				<ul class="side-nav" id="sideNav">
+					<li><a href="#modal_register">Register</a></li>
+					<li><a href="#modal_about">About</a>
+				</ul>
+			</div>
+		</nav>
+	</header>
+	<div id="modal_register" class="modal">
+		<div class="modal-content">
+			<h4 class="text-primary-3">Register</h4>
+			<form class="row" action="{% url 'brr-register' %}" method="post">
+				{% csrf_token %}
+				<!-- {{ regform.as_p }} -->
+				{{ form.non_field_errors }}
+				<div class="fieldWrapper col s12 m12 l12">
+			    {{ regform.username.errors }}
+			    {{ regform.username.label_tag }}
+			    {{ regform.username }}
+				</div>
+				<div class="fieldWrapper col s12 m6 l6">
+			    {{ regform.first_name.errors }}
+			    {{ regform.first_name.label_tag }}
+			    {{ regform.first_name }}
+				</div>
+				<div class="fieldWrapper col s12 m6 l6">
+			    {{ regform.last_name.errors }}
+			    {{ regform.last_name.label_tag }}
+			    {{ regform.last_name }}
+				</div>
+				<div class="fieldWrapper col s12 m6 l6">
+					{{ regform.phone.errors }}
+					{{ regform.phone.label_tag }}
+					{{ regform.phone }}
+				</div>
+				<div class="fieldWrapper col s12 m6 l6">
+					{{ regform.groups.errors }}
+					{{ regform.groups.label_tag }}
+					{{ regform.groups }}
+				</div>
+				<div class="fieldWrapper col s12 m12 l12">
+					{{ regform.email.errors }}
+					{{ regform.email.label_tag }}
+					{{ regform.email }}
+				</div>
+				<div class="fieldWrapper col s12 m6 l6">
+					{{ regform.password1.errors }}
+					{{ regform.password1.label_tag }}
+					{{ regform.password1 }}
+				</div>
+				<div class="fieldWrapper col s12 m6 l6">
+					{{ regform.password2.errors }}
+					{{ regform.password2.label_tag }}
+					{{ regform.password2 }}
+				</div>
+				<div class="col s12 m12 l12">
+					<button class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2 btm-pad-2 right" type="submit" name="action">Join</button>
+				</div>
+			</form>
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+			</div>
 		</div>
-	</nav>
+	</div>
+	<div id="modal_about" class="modal">
+		<div class="modal-content">
+			<h5 class="text-primary-0 profile-heading">About BookRRaven</h5>
+			<p class="section">BookRRaven started as a collaboration between three aspiring developers as a way to showcase their coding talent. Unfinished it was taken up by Jonathan Ben-Ammi to complete and become one of the cornerstones of his coding portfolio. BookRRaven has potential for connecting unsigned artists with venues who want raw tallent. For more information please visit <a href="http://jonathanben-ammi.com" target="_blank">JonathanBen-Ammi.com</a></p>
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+			</div>
+		</div>
+	</div>
+	{% if messages %}
+	<!-- Modal for confirm and error messages  -->
+	<div id='modal_messages' class="modal">
+		<div class="modal-content">
+			{% for message in messages %}
+			<p class="center-align">{{message}}</p>
+			{% endfor %}
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect btn-flat">Close</a>
+			</div>
+		</div>
+	</div>
+	{% endif %}
