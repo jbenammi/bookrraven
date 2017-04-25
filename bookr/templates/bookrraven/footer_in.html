@@ -46,7 +46,6 @@
 	<script src="{% static 'bookr/js/jquery-2.2.3.js' %}"></script>
 	<script src="{% static 'bookr/js/jquery-ui.js' %}"></script>
 	<script src="{% static 'bookr/js/materialize.js' %}"></script>
-	{# include 'session_security/all.html' #}
 	<script>
 		$(document).ready(function(){
 			// function needed for collapsable navigation links
@@ -63,6 +62,7 @@
 			{% endif %}
 		})
   </script>
+	{% include 'session_security/all.html' %}
 <!-- End Scripts -->
 </body>
 </html>
