@@ -5,7 +5,7 @@ from django.contrib import admin
 
 urlpatterns = [
 	url(r'^', include('bookr.urls')),
-	# url(r'session_security/', include('session_security.urls')),
+	url(r'session_security/', include('session_security.urls')),
     url(r'^admin/', admin.site.urls),
 ]
 

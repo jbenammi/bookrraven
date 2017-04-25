@@ -116,6 +116,7 @@ class ArtistDashboard(LoginRequiredMixin, View):
         'eventForm': EventForm,
         'messageForm': MessageForm,
         }
+        print context['artistForm'], "Artist Form"
         if artistInfo:
             artImages = ArtistImages.objects.filter(artist = artistInfo, defaultimage=True)
             if artImages:
@@ -133,7 +134,7 @@ class BookerDashboard(View):
         venueProfile = getVenue("contact_id", userinfo)
         context = {
         'venueProfile': venueProfile,
-        'venueform': VenueForm,
+        'venueForm': VenueForm,
         'venueimgform': ImageForm,
         'eventForm': EventForm,
         'messageForm': MessageForm,
@@ -151,8 +152,6 @@ class BookerDashboard(View):
 
 class Venues(View):
     def get(self,request):
-        venueform = VenueForm
-        imgform = ImageForm
         venueList = VenueList.objects.all()
         images = VenueImages.objects.filter(defaultimage=True)
         userinfo= MyUser.objects.get(id = request.user.id)
@@ -168,9 +167,10 @@ class Venues(View):
                     })
     	context = {
     		'venueList': venues,
-            'venueform': venueform,
+            'venueForm': VenueForm,
             'artistInfo': artistInfo,
             'venueProfile': venueProfile,
+            'artistForm': ArtistForm,
     	}
     	return render(request, 'bookrraven/venueindex.html', context)
 
@@ -292,6 +292,8 @@ class Artists(View):
         	'artistList': artists,
         	'artistInfo': artistInfo,
             'venueProfile': venueProfile,
+            'venueForm': VenueForm,
+            'artistForm': ArtistForm,
         }
         return render(request, 'bookrraven/artistindex.html', context)
 

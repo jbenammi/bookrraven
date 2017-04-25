@@ -17,7 +17,7 @@
 					{% if artist %}
 					<li><a href="{% url 'brr-artistinfo' artist.0.id %}">Artist Profile</a></li>
 					{% else %}
-					<li class="link modal-trigger" data-target="new_artist">Create Artist Profile</li>
+					<li><a href="#new_artist">Create Artist Profile</a></li>
 					{% endif %}
 					{% endwith %}
 					{% endif %}
@@ -26,7 +26,7 @@
 					{% if venue %}
 					<li><a href="{% url 'brr-venueinfo' venue.0.id %}">Venue Profile</a></li>
 					{% else %}
-					<li class="link modal-trigger" data-target="new_venue">Create Venue Profile</li>
+					<li><a href="#new_venue">Create Venue Profile</a></li>
 					{% endif %}
 					{% endwith %}
 					{% endif %}

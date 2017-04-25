@@ -12,55 +12,62 @@
 				<h4>Please Create Your Artist Profile</h4>
 				{% endif %}
 			</section>
-			<section class="col s12 m4 l4 offset-l1">
+			<section class="col s12 m6 l5 offset-l1">
 				<h4 class="text-secondary-1-0">Pending Events</h4>
 				<table>
 					<thead>
-						<tr>
-							<th></th>
-							<th>Date</th>
-							<th>Venue Name</th>
-							<th>New Message</th>
+						<tr class="row">
+							<th class="col s2" height="50px"></th>
+							<th class="col s3">Date</th>
+							<th class="col s5">Artist Name</th>
+							<th class="col s2 yes">Message</th>
 						</tr>
 					</thead>
-					<tbody>
-						{% for event in artistEvents %}
-						{% if event.status == "Pend" %}
-						<tr>
-							<td><a href="/event/{{event.id}}" class="btn waves-effect waves-light bg-secondary-2-4 eventinfo border-light-secondary-2"><i class="material-icons">mode_edit</i></a></td>
-							<td>{{event.event_date}}</td>
-							<td>{{event.venue_id.venue_name}}</td>
-							<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check'{% endif %}{% endfor %}></td>
-						</tr>
-						{% endif %}
-						{% endfor %}
-					</tbody>
 				</table>
+				<div class="index-table">
+					<table>
+						<tbody>
+							{% for event in artistEvents %}
+							{% if event.status == "Pend" %}
+							<tr class="row" height="50px">
+								<td class="col s2 pad-left-0"><a href="/event/{{event.id}}" class="btn waves-effect waves-light bg-secondary-2-4 eventinfo border-light-secondary-2"><i class="material-icons">mode_edit</i></a></td>
+								<td class="col s3 pad-top-12">{{event.event_date}}</td>
+								<td class="col s5 pad-top-12">{{event.venue_id.venue_name}}</td>
+								<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check col s2' {% else %} class="col s2"{% endif %}{% endfor %} height="44px"></td>
+							</tr>
+							{% endif %}
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
 				<h4 class="text-secondary-1-0">Accepted Events</h4>
 				<table>
 					<thead>
-						<tr>
-							<th></th>
-							<th>Date</th>
-							<th>Venue Name</th>
-							<th>New Message</th>
+						<tr class="row">
+							<th class="col s2" height="50px"></th>
+							<th class="col s3">Date</th>
+							<th class="col s5">Artist Name</th>
+							<th class="col s2 yes">Message</th>
 						</tr>
 					</thead>
-					<tbody>
-						{% for event in artistEvents %}
-						{% if event.status == "Acpt" %}
-						<tr>
-							<td><a href="/event/{{event.id}}" class="btn waves-effect waves-light bg-secondary-2-2 border-dark-secondary-2 eventinfo"><i class="material-icons">mode_edit</i></a></td>
-							<td>{{event.event_date}}</td>
-							<td>{{event.venue_id.venue_name}}</td>
-							<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check'{% endif %}{% endfor %}></td>
-						</tr>
-						{% endif %}
-						{% endfor %}
-					</tbody>
 				</table>
+				<div class="index-table">
+					<table>
+						<tbody>
+							{% for event in artistEvents %}
+							{% if event.status == "Acpt" %}
+							<tr class="row" height="50px">
+								<td class="col s2 pad-left-0"><a href="/event/{{event.id}}" class="btn waves-effect waves-light bg-secondary-2-2 eventinfo border-dark-secondary-2"><i class="material-icons">mode_edit</i></a></td>
+								<td class="col s3 pad-top-12">{{event.event_date}}</td>
+								<td class="col s5 pad-top-12">{{event.venue_id.venue_name}}</td>
+								<td {% for message in eventMessages %}{% if message.event_id == event %}class ='check col s2' {% else %} class="col s2"{% endif %}{% endfor %} height="44px"></td>
+							</tr>
+							{% endif %}
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
 			</section>
 		</div>
 	</main>
-
 {% include 'bookrraven/footer_in.html'  %}
