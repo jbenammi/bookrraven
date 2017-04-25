@@ -63,7 +63,6 @@ class Login(View):
 	        username = request.POST['username']
 	        password = request.POST['password']
 	        user = authenticate(username=username, password=password)
-        print user
         context = {
             'logform': logform,
             'regform': self.regform,
@@ -77,7 +76,6 @@ class Login(View):
 				elif request.user.groups == 'BKR':
 					return redirect('/bookerdashboard/')
         else:
-            print "in else"
             messages.error(request, "Username or Password is invalid")
             return redirect('/')
 
@@ -93,7 +91,6 @@ class Register(View):
         if regform.is_valid():
             regform.save()
             newUser = MyUser.objects.get(username=regform.cleaned_data['username'])
-            print newUser, "this is the new user"
             # log 'em in
             user = authenticate(username=regform.cleaned_data['username'], password=regform.cleaned_data['password1'],)
             django_login(request, user)
@@ -116,7 +113,6 @@ class ArtistDashboard(LoginRequiredMixin, View):
         'eventForm': EventForm,
         'messageForm': MessageForm,
         }
-        print context['artistForm'], "Artist Form"
         if artistInfo:
             artImages = ArtistImages.objects.filter(artist = artistInfo, defaultimage=True)
             if artImages:
@@ -124,7 +120,6 @@ class ArtistDashboard(LoginRequiredMixin, View):
             artistEvents = Event.objects.filter(artist_id = artistInfo).order_by('event_date')
             context['artistEvents'] = artistEvents
             messages = Message.objects.filter(event_id__artist_id=artistInfo).exclude(author_id=userinfo).exclude(read=True)
-            print messages
             context['eventMessages'] = messages
         return render(request, 'bookrraven/artisthome.html', context)
 
@@ -146,7 +141,6 @@ class BookerDashboard(View):
             venueEvents = Event.objects.filter(venue_id = venueProfile).order_by('event_date')
             context['venueEvents'] = venueEvents
             messages = Message.objects.filter(event_id__venue_id=venueProfile).exclude(author_id=userinfo).exclude(read=True)
-            print messages
             context['eventMessages'] = messages
         return render(request, 'bookrraven/bookerhome.html', context)
 
@@ -177,15 +171,12 @@ class Venues(View):
     def post(self, request):
         venform = VenueForm(request.POST)
         userinfo= MyUser.objects.get(id = request.user.id)
-        print venform.is_valid(), "is valid?"
         if venform.is_valid():
             new_venue = VenueList(venue_name = venform.cleaned_data['venue_name'], address=venform.cleaned_data['address'], city=venform.cleaned_data['city'], state=venform.cleaned_data['state'], zipcode=venform.cleaned_data['zipcode'], phone=venform.cleaned_data['phone'], site = venform.cleaned_data['site'], contact_id = userinfo)
-            print new_venue.contact_id
             new_venue.save()
             if request.FILES['image']:
                 newImage = VenueImages(image = request.FILES['image'], venue = new_venue, defaultimage=True)
                 newImage.save()
-            print new_venue, "New Venue Created"
         return redirect('/bookerdashboard/')
 
 class SingleVenue(View):
@@ -194,7 +185,6 @@ class SingleVenue(View):
         venueProfile = getVenue('id', venue_id)
         artistInfo = getArtist('contact_id', userinfo)
         venImages = VenueImages.objects.filter(venue=venueProfile)
-        print venueProfile, "venue Profile is"
     	context= {
             'venueProfile': venueProfile,
             'venueImages': venImages,
@@ -205,7 +195,6 @@ class SingleVenue(View):
             'artistForm': ArtistForm,
             'today': datetime.today()
     	}
-        print context['today'], "This is todays date"
     	return render(request, 'bookrraven/venue.html', context)
 
 class AddBooker(View):
@@ -223,12 +212,10 @@ class AddImg(View):
             posterInfo = Artist.objects.get(id = request.POST['artist_id'])
             newImage = ArtistImages(image = request.FILES['image'], artist = posterInfo)
             if 'defimage' in request.POST:
-                print "in defimage check"
                 try:
                     curDefImg = ArtistImages.objects.get(artist=posterInfo, defaultimage=True)
                 except:
                     curDefImg = None
-                print curDefImg, "this is the current def image"
                 if curDefImg:
                     curDefImg.defaultimage = False
                     curDefImg.save()
@@ -238,19 +225,16 @@ class AddImg(View):
             posterInfo = VenueList.objects.get(id = int(request.POST['venue_id']))
             newImage = VenueImages(image = request.FILES['image'], venue = posterInfo)
             if "defimage" in request.POST:
-                print "inside defimage if"
                 try:
                     curDefImg = VenueImages.objects.get(venue=posterInfo, defaultimage=True)
                 except:
                     curDefImg = None
-                print curDefImg
                 if curDefImg:
                     curDefImg.defaultimage = False
                     curDefImg.save()
                     newImage.defaultimage = True
             url = '/venue/'+request.POST['venue_id']
         newImage.save()
-        print newImage, "This is the new image after save"
         return redirect(url)
 
 class SingleArtist(View):
@@ -269,7 +253,6 @@ class SingleArtist(View):
             'artistForm': ArtistForm,
             'today': datetime.today()
         }
-        print context['today'], "This is today's Date"
         return render(request, 'bookrraven/artistprofile.html', context)
 
 class Artists(View):
@@ -287,7 +270,6 @@ class Artists(View):
                         "artist": artist,
                         "defaultimage": image,
                     })
-        print artists
         context = {
         	'artistList': artists,
         	'artistInfo': artistInfo,
@@ -307,7 +289,6 @@ class Artists(View):
             if request.FILES['image']:
                 newImage = ArtistImages(image = request.FILES['image'], artist = newArtist, defaultimage=True)
                 newImage.save()
-            print newArtist, "New Artist Created"
         else:
             form = ArtistForm()
         return redirect('/artistdashboard/')
@@ -420,7 +401,6 @@ class SingleEvent(View):
         elif request.user.groups == "BKR":
             try:
                 currentEvent = Event.objects.filter(id=event_id, venue_id__contact_id=userinfo).update(status=request.POST['status'], event_date=request.POST['event_date'])
-                print currentEvent, "in BKR"
             except ObjectDoesNotExist:
                 messages.error(request, "Error accessing event.")
                 return redirect('/bookerdashboard/')
